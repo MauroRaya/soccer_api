@@ -4,6 +4,7 @@ using soccer_api.Repositories;
 using Npgsql;
 using soccer_api.DTOs;
 using soccer_api.Services;
+using soccer_api.ViewModels;
 
 namespace soccer_api.Controllers
 {
@@ -28,14 +29,19 @@ namespace soccer_api.Controllers
         public async Task<IResult> GetById(int id)
         {
             var playerDTO = await _playerService.GetPlayerByIdAsync(id);
+            if (playerDTO == null)
+            {
+                return Results.NotFound();
+            }
+
             return Results.Ok(playerDTO);
         }
 
         [HttpPost("/api/player")]
-        public async Task<IResult> Post(Player player)
+        public async Task<IResult> Post(PlayerViewModel playerViewModel)
         {
-            await _playerService.AddPlayerAsync(player);
-            return Results.Ok($"Player {player.Name} was added successfully.");
+            await _playerService.AddPlayerAsync(playerViewModel);
+            return Results.Ok($"Player {playerViewModel.Name} was added successfully.");
         }
     }
 }

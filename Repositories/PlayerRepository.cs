@@ -7,9 +7,9 @@ namespace soccer_api.Repositories
     {
         private readonly string _connString;
 
-        public PlayerRepository(IConfiguration configuration)
+        public PlayerRepository()
         {
-            _connString = configuration.GetConnectionString("DefaultConnection");
+            _connString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION", EnvironmentVariableTarget.User);
         }
 
         public async Task<IEnumerable<Player>> GetAllPlayersAsync()
@@ -69,12 +69,13 @@ namespace soccer_api.Repositories
 
             using var cmd =
                 new NpgsqlCommand(
-                    "INSERT INTO player (name, amountGoals, salary, teamId) VALUES (@name, @amountGoals, @salary, @teamId)", conn);
+                    "INSERT INTO player (name, amount_goals, salary, team_id) VALUES (@name, @amountGoals, @salary, @teamId)",
+                    conn);
             cmd.Parameters.AddWithValue("@name", player.Name);
             cmd.Parameters.AddWithValue("@amountGoals", player.AmountGoals);
             cmd.Parameters.AddWithValue("@salary", player.Salary);
             cmd.Parameters.AddWithValue("@teamId", player.TeamId);
-            
+
             await cmd.ExecuteNonQueryAsync();
         }
     }

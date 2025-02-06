@@ -1,6 +1,7 @@
 ﻿using soccer_api.DTOs;
-using soccer_api.Repositories;
 using soccer_api.Models;
+using soccer_api.Repositories;
+using soccer_api.ViewModels;
 
 namespace soccer_api.Services
 {
@@ -18,7 +19,7 @@ namespace soccer_api.Services
             var players = await _repository.GetAllPlayersAsync();
 
             var playersDTO = new List<PlayerDTO>();
-            
+
             foreach (var p in players)
             {
                 playersDTO.Add(new PlayerDTO()
@@ -43,15 +44,22 @@ namespace soccer_api.Services
 
             return new PlayerDTO()
             {
+                Id = player.Id,
                 Name = player.Name,
                 AmountGoals = player.AmountGoals,
                 TeamId = player.TeamId,
             };
         }
 
-        public async Task AddPlayerAsync(Player player)
+        public async Task AddPlayerAsync(PlayerViewModel playerViewModel)
         {
-            await _repository.AddPlayerAsync(player);
+            await _repository.AddPlayerAsync(new Player()
+            {
+                Name = playerViewModel.Name,
+                AmountGoals = playerViewModel.AmountGoals,
+                Salary = playerViewModel.Salary,
+                TeamId = playerViewModel.TeamId
+            });
         }
     }
 }

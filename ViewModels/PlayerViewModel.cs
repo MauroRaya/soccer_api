@@ -1,10 +1,10 @@
-﻿namespace soccer_api.DTOs
+﻿namespace soccer_api.ViewModels
 {
-    public class PlayerDTO
+    public class PlayerViewModel
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int AmountGoals { get; set; }
+        public float Salary { get; set; }
         public int TeamId { get; set; }
     }
 }

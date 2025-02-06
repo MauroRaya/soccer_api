@@ -1,5 +1,5 @@
 ﻿using soccer_api.DTOs;
-using soccer_api.Models;
+using soccer_api.ViewModels;
 
 namespace soccer_api.Services
 {
@@ -7,6 +7,6 @@ namespace soccer_api.Services
     {
         Task<IEnumerable<PlayerDTO>> GetAllPlayersAsync();
         Task<PlayerDTO?> GetPlayerByIdAsync(int playerId);
-        Task AddPlayerAsync(Player player);
+        Task AddPlayerAsync(PlayerViewModel playerViewModel);
     }
 }
