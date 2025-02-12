@@ -73,7 +73,7 @@ namespace soccer_api.Services
             });
         }
 
-        public async Task<PlayerDTO?> RemovePlayerAsync(int id)
+        public async Task<PlayerDTO> RemovePlayerAsync(int id)
         {
             return await _repository.RemovePlayerAsync(id);
         }

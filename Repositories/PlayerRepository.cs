@@ -19,9 +19,16 @@ namespace soccer_api.Repositories
             return await _context.Players.ToListAsync();
         }
 
-        public async Task<Player?> GetPlayerByIdAsync(int id)
+        public async Task<Player> GetPlayerByIdAsync(int id)
         {
-            return await _context.Players.FindAsync(id);
+            var player = await _context.Players.FindAsync(id);
+
+            if (player is null)
+            {
+                throw new Exception("Player not found");
+            }
+
+            return player;
         }
 
         public async Task AddPlayerAsync(Player player)
@@ -33,6 +40,11 @@ namespace soccer_api.Repositories
         public async Task UpdatePlayerAsync(int id, Player newPlayer)
         {
             var player = await _context.Players.FindAsync(id);
+
+            if (player is null)
+            {
+                throw new Exception("Player not found");
+            }
             
             player.Name = newPlayer.Name;
             player.AmountGoals = newPlayer.AmountGoals;
@@ -42,24 +54,26 @@ namespace soccer_api.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PlayerDTO?> RemovePlayerAsync(int id)
+        public async Task<PlayerDTO> RemovePlayerAsync(int id)
         {
             var player = await _context.Players.FindAsync(id);
 
             if (player is null)
             {
-                return null;
+                throw new Exception("Player not found");
             }
             
-            _context.Players.Remove(player);
-            
-            return new PlayerDTO()
+            var playerDTO = new PlayerDTO()
             {
                 Id = player.Id,
                 Name = player.Name,
                 AmountGoals = player.AmountGoals,
                 TeamId = player.TeamId,
             };
+            
+            _context.Players.Remove(player);
+            
+            return playerDTO;
         }
     }
 }

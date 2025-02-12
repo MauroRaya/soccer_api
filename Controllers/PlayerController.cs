@@ -27,7 +27,8 @@ namespace soccer_api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IResult> GetById(int id)
+        public async Task<IResult> GetById(
+            [FromRoute] int id)
         {
             var playerDTO = await _playerService.GetPlayerByIdAsync(id);
             if (playerDTO == null)
@@ -39,24 +40,28 @@ namespace soccer_api.Controllers
         }
 
         [HttpPost]
-        public async Task<IResult> Post(PlayerViewModel playerViewModel)
+        public async Task<IResult> Post(
+            [FromBody] PlayerViewModel playerViewModel)
         {
             await _playerService.AddPlayerAsync(playerViewModel);
             return Results.Ok($"Player {playerViewModel.Name} was added successfully.");
         }
-        
+
         [HttpPut("{id}")]
-        public async Task<IResult> Put(int id, PlayerViewModel playerViewModel)
+        public async Task<IResult> Put(
+            [FromRoute] int id,
+            [FromBody] PlayerViewModel playerViewModel)
         {
             await _playerService.UpdatePlayerAsync(id, playerViewModel);
             return Results.Ok(playerViewModel);
         }
-        
+
         [HttpDelete("{id}")]
-        public async Task<IResult> Delete(int id)
+        public async Task<IResult> Delete(
+            [FromRoute] int id)
         {
             var player = await _playerService.RemovePlayerAsync(id);
-            return Results.Ok($"Player {player?.Name} was removed successfully.");
+            return Results.Ok($"Player {player.Name} was removed successfully.");
         }
     }
 }

@@ -6,9 +6,9 @@ namespace soccer_api.Repositories
     public interface IPlayerRepository
     {
         Task<IEnumerable<Player>> GetAllPlayersAsync();
-        Task<Player?> GetPlayerByIdAsync(int id);
+        Task<Player> GetPlayerByIdAsync(int id);
         Task AddPlayerAsync(Player player);
         Task UpdatePlayerAsync(int id, Player player);
-        Task<PlayerDTO?> RemovePlayerAsync(int id);
+        Task<PlayerDTO> RemovePlayerAsync(int id);
     }
 }
