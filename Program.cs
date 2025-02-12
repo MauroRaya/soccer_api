@@ -9,6 +9,7 @@ builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 
 string _connString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION", EnvironmentVariableTarget.User);
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(_connString));
 

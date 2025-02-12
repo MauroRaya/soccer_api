@@ -8,5 +8,7 @@ namespace soccer_api.Services
         Task<IEnumerable<PlayerDTO>> GetAllPlayersAsync();
         Task<PlayerDTO?> GetPlayerByIdAsync(int playerId);
         Task AddPlayerAsync(PlayerViewModel playerViewModel);
+        Task UpdatePlayerAsync(int id, PlayerViewModel playerViewModel);
+        Task<PlayerDTO?> RemovePlayerAsync(int id);
     }
 }

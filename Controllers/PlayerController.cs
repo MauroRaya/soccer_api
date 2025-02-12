@@ -9,6 +9,7 @@ using soccer_api.ViewModels;
 namespace soccer_api.Controllers
 {
     [ApiController]
+    [Route("/api/player")]
     public class PlayerController : ControllerBase
     {
         private readonly IPlayerService _playerService;
@@ -18,14 +19,14 @@ namespace soccer_api.Controllers
             _playerService = playerService;
         }
 
-        [HttpGet("/api/player")]
+        [HttpGet]
         public async Task<IResult> Get()
         {
             var playersDTO = await _playerService.GetAllPlayersAsync();
             return Results.Ok(playersDTO);
         }
 
-        [HttpGet("/api/player/{id}")]
+        [HttpGet("{id}")]
         public async Task<IResult> GetById(int id)
         {
             var playerDTO = await _playerService.GetPlayerByIdAsync(id);
@@ -37,11 +38,25 @@ namespace soccer_api.Controllers
             return Results.Ok(playerDTO);
         }
 
-        [HttpPost("/api/player")]
+        [HttpPost]
         public async Task<IResult> Post(PlayerViewModel playerViewModel)
         {
             await _playerService.AddPlayerAsync(playerViewModel);
             return Results.Ok($"Player {playerViewModel.Name} was added successfully.");
+        }
+        
+        [HttpPut("{id}")]
+        public async Task<IResult> Put(int id, PlayerViewModel playerViewModel)
+        {
+            await _playerService.UpdatePlayerAsync(id, playerViewModel);
+            return Results.Ok(playerViewModel);
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IResult> Delete(int id)
+        {
+            var player = await _playerService.RemovePlayerAsync(id);
+            return Results.Ok($"Player {player?.Name} was removed successfully.");
         }
     }
 }

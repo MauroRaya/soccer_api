@@ -61,5 +61,21 @@ namespace soccer_api.Services
                 TeamId = playerViewModel.TeamId
             });
         }
+
+        public async Task UpdatePlayerAsync(int id, PlayerViewModel playerViewModel)
+        {
+            await _repository.UpdatePlayerAsync(id, new Player()
+            {
+                Name = playerViewModel.Name,
+                AmountGoals = playerViewModel.AmountGoals,
+                Salary = playerViewModel.Salary,
+                TeamId = playerViewModel.TeamId
+            });
+        }
+
+        public async Task<PlayerDTO?> RemovePlayerAsync(int id)
+        {
+            return await _repository.RemovePlayerAsync(id);
+        }
     }
 }

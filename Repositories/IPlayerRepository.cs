@@ -1,11 +1,14 @@
+using soccer_api.DTOs;
 using soccer_api.Models;
 
 namespace soccer_api.Repositories
 {
     public interface IPlayerRepository
     {
-        public Task<IEnumerable<Player>> GetAllPlayersAsync();
-        public Task<Player?> GetPlayerByIdAsync(int id);
-        public Task AddPlayerAsync(Player player);
+        Task<IEnumerable<Player>> GetAllPlayersAsync();
+        Task<Player?> GetPlayerByIdAsync(int id);
+        Task AddPlayerAsync(Player player);
+        Task UpdatePlayerAsync(int id, Player player);
+        Task<PlayerDTO?> RemovePlayerAsync(int id);
     }
 }
