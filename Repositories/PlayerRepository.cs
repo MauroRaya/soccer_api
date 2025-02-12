@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using soccer_api.Models;
 
@@ -5,78 +6,27 @@ namespace soccer_api.Repositories
 {
     public class PlayerRepository : IPlayerRepository
     {
-        private readonly string _connString;
+        private readonly AppDbContext _context;
 
-        public PlayerRepository()
+        public PlayerRepository(AppDbContext context)
         {
-            _connString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION", EnvironmentVariableTarget.User);
+            _context = context;
         }
 
         public async Task<IEnumerable<Player>> GetAllPlayersAsync()
         {
-            using var conn = new NpgsqlConnection(_connString);
-            await conn.OpenAsync();
-
-            using var cmd = new NpgsqlCommand("SELECT * FROM player", conn);
-
-            using var reader = await cmd.ExecuteReaderAsync();
-
-            var players = new List<Player>();
-            while (await reader.ReadAsync())
-            {
-                players.Add(new Player()
-                {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    AmountGoals = reader.GetInt32(2),
-                    Salary = reader.GetFloat(3),
-                    TeamId = reader.GetInt32(4)
-                });
-            }
-
-            return players;
+            return await _context.Players.ToListAsync();
         }
 
         public async Task<Player?> GetPlayerByIdAsync(int id)
         {
-            using var conn = new NpgsqlConnection(_connString);
-            await conn.OpenAsync();
-
-            using var cmd = new NpgsqlCommand("SELECT * FROM player WHERE id = @id", conn);
-            cmd.Parameters.AddWithValue("@id", id);
-
-            using var reader = await cmd.ExecuteReaderAsync();
-
-            if (await reader.ReadAsync())
-            {
-                return new Player()
-                {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    AmountGoals = reader.GetInt32(2),
-                    Salary = reader.GetFloat(3),
-                    TeamId = reader.GetInt32(4)
-                };
-            }
-
-            return null;
+            return await _context.Players.FindAsync(id);
         }
 
         public async Task AddPlayerAsync(Player player)
         {
-            using var conn = new NpgsqlConnection(_connString);
-            await conn.OpenAsync();
-
-            using var cmd =
-                new NpgsqlCommand(
-                    "INSERT INTO player (name, amount_goals, salary, team_id) VALUES (@name, @amountGoals, @salary, @teamId)",
-                    conn);
-            cmd.Parameters.AddWithValue("@name", player.Name);
-            cmd.Parameters.AddWithValue("@amountGoals", player.AmountGoals);
-            cmd.Parameters.AddWithValue("@salary", player.Salary);
-            cmd.Parameters.AddWithValue("@teamId", player.TeamId);
-
-            await cmd.ExecuteNonQueryAsync();
+            await _context.Players.AddAsync(player);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -6,6 +6,6 @@ namespace soccer_api.Repositories
     {
         public Task<IEnumerable<Team>> GetAllAsync();
         public Task<Team?> GetByIdAsync(int id);
-        public Task<int> AddAsync(Team team);
+        public Task AddAsync(Team team);
     }
 }
